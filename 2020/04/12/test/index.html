@@ -5,15 +5,16 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>test blog - Hexo</title>
+    <title>sublime快捷键插入当前时间 - wuhechong</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="这是一个测试用的bolg
-"> 
+    <meta name="description" content="1、创建时间插件  Tools -&amp;gt; developer -&amp;gt; New Plugin…
+2、插入如下代码，保存在 Packages\User\addCurrentTime.py
+1234,"> 
     <meta name="author" content="wuhechong"> 
-    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="alternative" href="atom.xml" title="wuhechong" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
     
     
@@ -32,14 +33,14 @@
 <meta name="generator" content="Hexo 4.2.0"></head>
 
 <body class="loading">
-    <span id="config-title" style="display:none">Hexo</span>
+    <span id="config-title" style="display:none">wuhechong</span>
     <div id="loader"></div>
     <div id="single">
     <div id="top" style="display: block;">
     <div class="bar" style="width: 0;"></div>
-    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="localhost"></a>
     <div title="播放/暂停" class="iconfont icon-play"></div>
-    <h3 class="subtitle">test blog</h3>
+    <h3 class="subtitle">sublime快捷键插入当前时间</h3>
     <div class="social">
         <div>
             <div class="share">
@@ -54,21 +55,39 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">test blog</h1>
+        <h1 class="title">sublime快捷键插入当前时间</h1>
         <div class="stuff">
-            <span>十月 12, 2016</span>
+            <span>四月 12, 2020</span>
             
-  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E6%A0%87%E7%AD%BE1/" rel="tag">标签1</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E6%A0%87%E7%AD%BE2/" rel="tag">标签2</a></li></ul>
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/sublime/" rel="tag">sublime</a></li></ul>
 
 
         </div>
         <div class="content markdown">
-            <p>这是一个测试用的bolg</p>
+            <p>1、创建时间插件  Tools -&gt; developer -&gt; New Plugin…</p>
+<p>2、插入如下代码，保存在 Packages\User\addCurrentTime.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import sublime</span><br><span class="line">import sublime_plugin</span><br><span class="line">import datetime</span><br><span class="line"></span><br><span class="line">class AddCurrentTimeCommand(sublime_plugin.TextCommand):</span><br><span class="line">    def run(self, edit):</span><br><span class="line">        self.view.run_command(&quot;insert_snippet&quot;,</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;contents&quot;: &quot;%s&quot; % datetime.datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<p>3、设置快捷键映射  Preference → Key Bindings - User</p>
+<p><code>{ &quot;keys&quot;: [&quot;ctrl+z&quot;], &quot;command&quot;: &quot;add_current_time&quot;}</code></p>
+<p>4、重启sublime3即可</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
-                <source type="audio/mpeg" src="http://domain.com/awesome.mp3">
+                <source type="audio/mpeg" src="">
             </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
             
         </div>
         

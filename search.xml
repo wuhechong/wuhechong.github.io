@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>test</title>
+    <url>/2020/04/11/hello-world/</url>
+    <content><![CDATA[<p>滕王高阁临江渚，佩玉鸣鸾罢歌舞。</p>
+<p>画栋朝飞南浦云，珠帘暮卷西山雨。</p>
+<p>闲云潭影日悠悠，物换星移几度秋。</p>
+<p>阁中帝子今何在？槛外长江空自流。 </p>
+]]></content>
+  </entry>
+  <entry>
+    <title>sublime快捷键插入当前时间</title>
+    <url>/2020/04/12/test/</url>
+    <content><![CDATA[<p>1、创建时间插件  Tools -&gt; developer -&gt; New Plugin…</p>
+<p>2、插入如下代码，保存在 Packages\User\addCurrentTime.py</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import sublime</span><br><span class="line">import sublime_plugin</span><br><span class="line">import datetime</span><br><span class="line"></span><br><span class="line">class AddCurrentTimeCommand(sublime_plugin.TextCommand):</span><br><span class="line">    def run(self, edit):</span><br><span class="line">        self.view.run_command(&quot;insert_snippet&quot;,</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;contents&quot;: &quot;%s&quot; % datetime.datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<p>3、设置快捷键映射  Preference → Key Bindings - User</p>
+<p><code>{ &quot;keys&quot;: [&quot;ctrl+z&quot;], &quot;command&quot;: &quot;add_current_time&quot;}</code></p>
+<p>4、重启sublime3即可</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>sublime</tag>
+      </tags>
+  </entry>
+</search>
