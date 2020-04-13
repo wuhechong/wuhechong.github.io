@@ -417,7 +417,7 @@ $(function() {
 					if($("#hitokoto").data('st') == true){
 						$.get("https://v1.hitokoto.cn/", function (data) {
 						var data = data;
-						var str =  "苦心膏沐百不论赀，富贵人生各有时。" + " ——  By "		
+						var str =  "苦心膏沐百不论赀，富贵人生各有时。" + " —— "		
 						var options = {
 						  strings: [ 
 							//str + "Who??^1000",
