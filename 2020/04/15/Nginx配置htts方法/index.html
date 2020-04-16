@@ -5,12 +5,16 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>配置多个ssh密钥 - wuhechong</title>
+    <title>Nginx配置https方法 - wuhechong</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="早些时候生成了一个ssh密钥用于连接远程的服务器,如今为了连接github需要使用新的密钥，后面可能还会有个码云，它们项目的ssh-key都不一样，此时就只能通过配置config使之可配多个key，,"> 
+    <meta name="description" content="为了熟悉一下Nginx服务器的配置，决定尝试配置一下ssl证书，让网站在被访问时有个绿色的小锁。
+
+获取ssl证书
+
+ssl证书的功能主要是证明身份和加密，一般由有公信力的CA机构签发，所以大部分都,"> 
     <meta name="author" content="wuhechong"> 
     <link rel="alternative" href="atom.xml" title="wuhechong" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -38,7 +42,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://wuhechong.github.io"></a>
     <div title="播放/暂停" class="iconfont icon-play"></div>
-    <h3 class="subtitle">配置多个ssh密钥</h3>
+    <h3 class="subtitle">Nginx配置https方法</h3>
     <div class="social">
         <div>
             <div class="share">
@@ -53,31 +57,40 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">配置多个ssh密钥</h1>
+        <h1 class="title">Nginx配置https方法</h1>
         <div class="stuff">
-            <span>四月 14, 2020</span>
+            <span>四月 15, 2020</span>
             
-  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/ssh/" rel="tag">ssh</a></li></ul>
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Nginx/" rel="tag">Nginx</a></li></ul>
 
 
         </div>
         <div class="content markdown">
-            <p>早些时候生成了一个ssh密钥用于连接远程的服务器,如今为了连接github需要使用新的密钥，后面可能还会有个码云，它们项目的ssh-key都不一样，此时就只能通过配置config使之可配多个key，当用ssh读取远程仓库的时候，自动去匹配ssh-key。</p>
+            <p>为了熟悉一下Nginx服务器的配置，决定尝试配置一下ssl证书，让网站在被访问时有个绿色的小锁。</p>
 <ol>
-<li><p>生成新的密钥</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;你的邮箱&quot;</span><br><span class="line">$ Enter file in which to save the key (&#x2F;root&#x2F;.ssh&#x2F;id_rsa): &#x2F;root&#x2F;.ssh&#x2F;id_rsa_github</span><br><span class="line">&#x2F;&#x2F;可以在此时输入密钥名或生成后手动修改</span><br></pre></td></tr></table></figure></li>
-<li><p>此时生成了id_rsa_github（私钥）和 id_rsa_github.pub（公钥）文件，将公钥文件的内容添加到你github上。码云等其他账号下的同上。</p>
-</li>
-<li><p>在.ssh目录下创建config文件（已经有了可以跳过这步），在里面配置如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># github</span><br><span class="line">Host github #主机名 连接时代替服务器地址名</span><br><span class="line">HostName github.com #主机地址</span><br><span class="line">User git  #代表git账户</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;id_rsa_github #github的私钥</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">#Port 端口号 #若git地址端口号非默认，在此处配置</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>测试是否可以连接成功。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -T github  &#x2F;&#x2F;测试github连接成功</span><br><span class="line">Warning: Permanently added the RSA host key for IP address &#39;18.***.***.***&#39; to the list of known hosts.</span><br><span class="line">Hi ***! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br><span class="line">&#x2F;&#x2F;出现如上信息表示连接成功</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>通过主机名操作例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone github:geekFeier&#x2F;my-dream.git </span><br><span class="line">&#x2F;&#x2F;在配置文件中配置了github这个主机，用github代替&quot;git@你的邮箱&quot;</span><br></pre></td></tr></table></figure></li>
+<li>获取ssl证书</li>
 </ol>
-
+<p>ssl证书的功能主要是证明身份和加密，一般由有公信力的CA机构签发，所以大部分都是付费，当然也有免费的。<br>申请免费的可以在腾讯云控制面板-》云产品-》域名与网站-》SSL证书管理里点击申请一个一年有效期的免费ssl证书。<br>申请后会获得一个压缩包，里面有各种服务器版本的ssl证书，此处以Nginx服务器为例。</p>
+<hr>
+<ul>
+<li><small><em>也可以自己使用 OpenSSL 工具生成 SSL Key 和 CSR 文件，然后上传 CSR 文件给CA机构，完成签署后会获得.crt后缀的证书文件。</em></small></li>
+</ul>
+<hr>
+<ol start="2">
+<li><p>将解压后Nginx文件夹目录里的证书和密钥上传到服务器中并记录下存放的目录。</p>
+</li>
+<li><p>修改Nginx的配置文件如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    #ssl参数</span><br><span class="line">    listen              443 ssl;</span><br><span class="line">    server_name         你的域名;</span><br><span class="line">    #证书文件</span><br><span class="line">    ssl_certificate     证书路径&#x2F;证书名.crt;</span><br><span class="line">    #密钥文件</span><br><span class="line">    ssl_certificate_key 密钥路径&#x2F;密钥名.key;</span><br><span class="line">    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">    #...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>重启服务器即可</p>
+</li>
+<li><p>HTTPS服务器优化，减少 CPU 运算量</p>
+</li>
+</ol>
+<p>SSL 的运行计算需要消耗额外的 CPU 资源，SSL 通讯过程中『握手』阶段的运算最占用 CPU 资源，有两个方法可以减少每台客户端的运算量：</p>
+<pre><code>设置 keepalive 长连接，一个连接发送更多个请求
+复用 SSL 会话参数，在并行并发的连接数中避免进行多次 SSL“握手”</code></pre><p>这些会话会存储在一个 SSL 会话缓存里面，通过命令 ssl_session_cache 配置，可以使缓存在机器间共享，然后利用客戶端在“握手”阶段使用的 seesion id 去查询服务端的 session cathe(如果服务端设置有的话)，简化“握手”阶段。</p>
+<p>配置信息如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    #配置共享会话缓存大小</span><br><span class="line">    ssl_session_cache   shared:SSL:10m;</span><br><span class="line">    #配置会话超时时间</span><br><span class="line">    ssl_session_timeout 10m;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen              443 ssl;</span><br><span class="line">        server_name         你的域名;</span><br><span class="line">        #设置长连接</span><br><span class="line">        keepalive_timeout   70;</span><br><span class="line"></span><br><span class="line">        #证书文件</span><br><span class="line">    	ssl_certificate     证书路径&#x2F;证书名.crt;</span><br><span class="line">    	#密钥文件</span><br><span class="line">    	ssl_certificate_key 密钥路径&#x2F;密钥名.key;</span><br><span class="line">    	ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    	ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">        #...</span><br></pre></td></tr></table></figure>
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">

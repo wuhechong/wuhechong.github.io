@@ -58,7 +58,7 @@
   <entry>
     <title>配置多个ssh密钥</title>
     <url>/2020/04/14/%E9%85%8D%E7%BD%AE%E5%A4%9A%E4%B8%AAssh%E5%AF%86%E9%92%A5/</url>
-    <content><![CDATA[<p>一开始的时候为了连接远程的服务器生成了一个ssh密钥,后面为了连接github需要使用新的密钥，后面还有个码云，它们项目的ssh-key都不一样，此时就只能通过配置config使之可配多个key，当用ssh读取远程仓库的时候，自动去匹配ssh-key。</p>
+    <content><![CDATA[<p>早些时候生成了一个ssh密钥用于连接远程的服务器,如今为了连接github需要使用新的密钥，后面可能还会有个码云，它们项目的ssh-key都不一样，此时就只能通过配置config使之可配多个key，当用ssh读取远程仓库的时候，自动去匹配ssh-key。</p>
 <ol>
 <li><p>生成新的密钥</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C &quot;你的邮箱&quot;</span><br><span class="line">$ Enter file in which to save the key (&#x2F;root&#x2F;.ssh&#x2F;id_rsa): &#x2F;root&#x2F;.ssh&#x2F;id_rsa_github</span><br><span class="line">&#x2F;&#x2F;可以在此时输入密钥名或生成后手动修改</span><br></pre></td></tr></table></figure></li>
@@ -97,6 +97,41 @@
       </categories>
       <tags>
         <tag>sublime</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nginx配置https方法</title>
+    <url>/2020/04/15/Nginx%E9%85%8D%E7%BD%AEhtts%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p>为了熟悉一下Nginx服务器的配置，决定尝试配置一下ssl证书，让网站在被访问时有个绿色的小锁。</p>
+<ol>
+<li>获取ssl证书</li>
+</ol>
+<p>ssl证书的功能主要是证明身份和加密，一般由有公信力的CA机构签发，所以大部分都是付费，当然也有免费的。<br>申请免费的可以在腾讯云控制面板-》云产品-》域名与网站-》SSL证书管理里点击申请一个一年有效期的免费ssl证书。<br>申请后会获得一个压缩包，里面有各种服务器版本的ssl证书，此处以Nginx服务器为例。</p>
+<hr>
+<ul>
+<li><small><em>也可以自己使用 OpenSSL 工具生成 SSL Key 和 CSR 文件，然后上传 CSR 文件给CA机构，完成签署后会获得.crt后缀的证书文件。</em></small></li>
+</ul>
+<hr>
+<ol start="2">
+<li><p>将解压后Nginx文件夹目录里的证书和密钥上传到服务器中并记录下存放的目录。</p>
+</li>
+<li><p>修改Nginx的配置文件如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    #ssl参数</span><br><span class="line">    listen              443 ssl;</span><br><span class="line">    server_name         你的域名;</span><br><span class="line">    #证书文件</span><br><span class="line">    ssl_certificate     证书路径&#x2F;证书名.crt;</span><br><span class="line">    #密钥文件</span><br><span class="line">    ssl_certificate_key 密钥路径&#x2F;密钥名.key;</span><br><span class="line">    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">    #...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>重启服务器即可</p>
+</li>
+<li><p>HTTPS服务器优化，减少 CPU 运算量</p>
+</li>
+</ol>
+<p>SSL 的运行计算需要消耗额外的 CPU 资源，SSL 通讯过程中『握手』阶段的运算最占用 CPU 资源，有两个方法可以减少每台客户端的运算量：</p>
+<pre><code>设置 keepalive 长连接，一个连接发送更多个请求
+复用 SSL 会话参数，在并行并发的连接数中避免进行多次 SSL“握手”</code></pre><p>这些会话会存储在一个 SSL 会话缓存里面，通过命令 ssl_session_cache 配置，可以使缓存在机器间共享，然后利用客戶端在“握手”阶段使用的 seesion id 去查询服务端的 session cathe(如果服务端设置有的话)，简化“握手”阶段。</p>
+<p>配置信息如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    #配置共享会话缓存大小</span><br><span class="line">    ssl_session_cache   shared:SSL:10m;</span><br><span class="line">    #配置会话超时时间</span><br><span class="line">    ssl_session_timeout 10m;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen              443 ssl;</span><br><span class="line">        server_name         你的域名;</span><br><span class="line">        #设置长连接</span><br><span class="line">        keepalive_timeout   70;</span><br><span class="line"></span><br><span class="line">        #证书文件</span><br><span class="line">    	ssl_certificate     证书路径&#x2F;证书名.crt;</span><br><span class="line">    	#密钥文件</span><br><span class="line">    	ssl_certificate_key 密钥路径&#x2F;密钥名.key;</span><br><span class="line">    	ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    	ssl_ciphers         HIGH:!aNULL:!MD5;</span><br><span class="line">        #...</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>服务器</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
       </tags>
   </entry>
 </search>
