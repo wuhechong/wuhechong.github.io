@@ -134,4 +134,52 @@
         <tag>Nginx</tag>
       </tags>
   </entry>
+  <entry>
+    <title>MySQL常用储存引擎——InnDB和Myisam的区别</title>
+    <url>/2020/04/16/MySQL%E5%B8%B8%E7%94%A8%E5%82%A8%E5%AD%98%E5%BC%95%E6%93%8E%E2%80%94%E2%80%94InnDB%E5%92%8CMyisam%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h2 id="MyISAM和InnoDB对比"><a href="#MyISAM和InnoDB对比" class="headerlink" title="MyISAM和InnoDB对比"></a>MyISAM和InnoDB对比</h2><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="left">MyISAM</th>
+<th align="left">InnoDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">储存方式</td>
+<td align="left">每个MyISAM在磁盘上存储成三个文件。第一个文件的名字以表的名字开始，扩展名指出文件类型。<br>.frm文件存储表定义。<br>数据文件的扩展名为.MYD (MYData)。<br>索引文件的扩展名是.MYI (MYIndex)。</td>
+<td align="left">在InnoDB存储引擎中，所有数据都存放在表空间(tablespace)中，表空间由段(segment)、区(extent)、页(page)、行（Row）组成</td>
+</tr>
+<tr>
+<td align="center">事务处理</td>
+<td align="left">不支持</td>
+<td align="left">支持事务、外部键等高级数据库功能</td>
+</tr>
+<tr>
+<td align="center">锁</td>
+<td align="left">支持表锁</td>
+<td align="left">支持行锁也支持表锁，在读取数据时不加锁，当无法确定扫描范围时，InnoDB会变成使用表锁；例如执行”update table set type=1 where name like %xx%”</td>
+</tr>
+<tr>
+<td align="center">性能</td>
+<td align="left">MyISAM适合查询以及插入为主的应用，查询和搜索数据较快，但插入和更新数据时效率较低。适合经常被查询但很少修改的数据，例如国家省市等数据。</td>
+<td align="left">InnoDB支持事务、外部键等功能，并发量较大，适合需要插入大量update的表，查询的时候相率相对较低，适合储存安全要求较高的，经常修改的数据。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>InnoDB 中不保存表的具体行数，也就是说，执行select count(*) from table时，InnoDB要扫描一遍整个表来计算有多少行，但是MyISAM只要简单的读出保存好的行数 即可。注意的是，当count(*)语句包含 where条件时，两种表的操作是一样的。</p>
+</li>
+<li><p>DELETE FROM table时，InnoDB不会重新建立表，而是一行一行的删除。</p>
+</li>
+<li><p>LOAD TABLE FROM MASTER操作对InnoDB是不起作用的，解决方法是首先把InnoDB表改成MyISAM表，导入数据后再改成InnoDB表，但是对于使用的额外的 InnoDB特性（例如外键）的表不适用。 </p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
 </search>
